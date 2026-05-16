@@ -29,6 +29,25 @@ from tradingagents.agents.utils.signal_data_tools import (
     get_industry_comparison,
 )
 
+from langchain_core.tools import tool
+
+
+@tool
+def get_supplemental_data(ticker: str) -> str:
+    """获取 stock-analysis 提供的补充基本面数据。
+
+    包含：股本结构、主营业务构成、十大股东、十大流通股东、
+    历史分红、融资融券、业绩预告、股东户数变化。
+
+    ⚠️ 数据质量约束：若返回内容中出现 "数据质量提示" 或标记为
+    suspect（可疑）/stale（过旧）/empty（为空）的数据，
+    必须降权处理，不得作为强结论或交易建议依据。
+    """
+    from tradingagents.dataflows.supplemental_stock_analysis import (
+        get_stock_analysis_supplement,
+    )
+    return get_stock_analysis_supplement(ticker)
+
 
 def get_language_instruction() -> str:
     """Return a prompt instruction for the configured output language.

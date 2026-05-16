@@ -45,6 +45,7 @@ from tradingagents.agents.utils.agent_utils import (
     get_dragon_tiger_board,
     get_lockup_expiry,
     get_industry_comparison,
+    get_supplemental_data,
 )
 
 from .checkpointer import checkpoint_step, clear_checkpoint, get_checkpointer, thread_id
@@ -193,6 +194,7 @@ class TradingAgentsGraph:
                     get_income_statement,
                     get_profit_forecast,
                     get_industry_comparison,
+                    get_supplemental_data,
                 ]
             ),
             "policy": ToolNode(
@@ -220,6 +222,7 @@ class TradingAgentsGraph:
                     get_news,
                     get_fundamentals,
                     get_lockup_expiry,
+                    get_supplemental_data,
                 ]
             ),
         }

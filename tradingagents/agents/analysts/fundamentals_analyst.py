@@ -9,6 +9,7 @@ from tradingagents.agents.utils.agent_utils import (
     get_insider_transactions,
     get_language_instruction,
     get_profit_forecast,
+    get_supplemental_data,
 )
 from tradingagents.dataflows.config import get_config
 
@@ -25,6 +26,7 @@ def create_fundamentals_analyst(llm):
             get_income_statement,
             get_profit_forecast,
             get_industry_comparison,
+            get_supplemental_data,
         ]
 
         system_message = (
@@ -42,6 +44,8 @@ def create_fundamentals_analyst(llm):
             "\n- `get_cashflow`：现金流量表详细数据"
             "\n- `get_income_statement`：利润表详细数据"
             "\n- `get_industry_comparison(ticker, curr_date)`：获取全行业横向对比（90个行业涨跌幅/成交额/净流入排名，用于估值对标和行业定位）"
+            "\n- `get_supplemental_data(ticker)`：获取 stock-analysis 补充数据（股本结构、主营业务构成、十大股东/流通股东、历史分红、融资融券、业绩预告、股东户数变化）"
+            "\n\n⚠️ get_supplemental_data 数据质量约束：若返回内容中出现\"数据质量提示\"或数据被标记为 suspect（可疑）/stale（过旧），必须降权处理。suspect 数据仅作背景参考，stale 数据仅作历史参考，不得作为强结论或买卖依据。empty 数据直接跳过，不得编造。"
             "\n\n撰写详尽的基本面研究报告，给出具体数据支撑的投资建议。报告末尾附 Markdown 表格汇总关键财务指标和估值水平。"
             "\n\n📋 必采清单 — 以下数据点必须出现在报告中，无法获取时标注 [数据缺失: xxx]："
             "\n1. PE（TTM）、PB、总市值"

@@ -6,6 +6,7 @@ from tradingagents.agents.utils.agent_utils import (
     get_language_instruction,
     get_lockup_expiry,
     get_news,
+    get_supplemental_data,
 )
 from tradingagents.dataflows.config import get_config
 
@@ -22,6 +23,7 @@ def create_lockup_watcher(llm):
             get_news,
             get_fundamentals,
             get_lockup_expiry,
+            get_supplemental_data,
         ]
 
         system_message = (
@@ -43,6 +45,8 @@ def create_lockup_watcher(llm):
             "\n- `get_fundamentals`：获取公司股本结构信息"
             "\n- `get_news(query, start_date, end_date)`：搜索解禁/减持相关新闻和公告"
             "\n- `get_lockup_expiry(ticker, curr_date)`：获取限售解禁日历（历史解禁记录+未来90天待解禁计划，含解禁数量/占比/影响评估）"
+            "\n- `get_supplemental_data(ticker)`：获取补充数据（股本结构变动、十大股东/流通股东、股东户数变化、历史分红、业绩预告），辅助判断股权结构变化和筹码集中度趋势"
+            "\n\n⚠️ get_supplemental_data 数据质量约束：若数据标记为 suspect（可疑，如融资融券数据可能非个股专属），仅作背景参考。若标记为 stale（过旧，如股东户数数据可能仅到数年前），仅作历史参考，不代表当前筹码状态。empty 数据直接跳过。出现\"数据质量提示\"时必须降权处理。"
             "\n\n撰写详细的解禁/减持风险评估报告,给出减持压力总体评级(重大压力/中等压力/轻微压力/无明显压力),并估算潜在减持规模和时间窗口。报告末尾附 Markdown 表格列出关键解禁/减持事件、规模和影响评估。"
             "\n\n📋 必采清单 — 以下数据点必须出现在报告中，无法获取时标注 [数据缺失: xxx]："
             "\n1. 近 6 个月内部人/大股东交易记录（增持/减持/无变动）"
