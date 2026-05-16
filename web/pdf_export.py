@@ -11,8 +11,14 @@ from fpdf import FPDF
 
 
 _FONT_CANDIDATES = [
+    # Windows
+    "C:/Windows/Fonts/msyh.ttc",
+    "C:/Windows/Fonts/simhei.ttf",
+    "C:/Windows/Fonts/simsun.ttc",
+    # macOS
     "/System/Library/Fonts/PingFang.ttc",
     "/System/Library/Fonts/STHeiti Light.ttc",
+    # Linux
     "/usr/share/fonts/truetype/noto/NotoSansSC-Regular.ttf",
     "/usr/share/fonts/noto-cjk/NotoSansCJKsc-Regular.otf",
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
