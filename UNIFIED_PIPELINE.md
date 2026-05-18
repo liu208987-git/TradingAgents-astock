@@ -27,7 +27,12 @@
 
 ```bash
 cd <your-workspace>/TradingAgents-astock
-.venv\Scripts\activate
+
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+
+# Linux/macOS
+source .venv/bin/activate
 
 # 已有分析结果 → 跳过数据采集
 python scripts/run_full_report.py 600519 --name 贵州茅台 --skip-snapshot

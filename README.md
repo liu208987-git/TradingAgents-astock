@@ -1,6 +1,6 @@
 # A股多Agent投研工作台 V0.1
 
-本仓库是基于 [TradingAgents-Astock](https://github.com/simonlin1212/TradingAgents-astock) 的增强版 fork，新增 stock-analysis 补充数据接入、quality_flags 数据质量防护和统一 HTML 报告流水线，整合 [stock-analysis](https://github.com/mingli30119/stock-analysis) 补充数据与 HTML 报告能力。
+本仓库是基于 [TradingAgents-Astock](https://github.com/simonlin1212/TradingAgents-astock) 的增强版 fork，新增 stock-analysis 补充数据接入、quality_flags 数据质量防护和统一 HTML 报告流水线，整合了 [stock-analysis](https://github.com/mingli30119/stock-analysis) 的补充数据与 HTML 报告能力。
 
 > 本项目仅供学习研究与技术演示，不构成任何投资建议。
 
@@ -19,7 +19,7 @@
 
 ## 依赖项目
 
-本项目运行时依赖以下两个外部项目（需克隆到 **同级目录**）：
+本项目运行时主要依赖 stock-analysis；a-stock-data 作为数据源参考项目，核心能力已由 TradingAgents-Astock 桥接。
 
 | 项目 | 路径 | 用途 |
 |------|------|------|
@@ -53,9 +53,15 @@ python scripts/run_stock_analysis_snapshot.py 600519
 ### 3. 运行 Agent 分析（需要 LLM API，约 3-5 分钟）
 
 ```bash
-.venv\Scripts\activate
-tradingagents-web   # 浏览器打开 http://localhost:8501，输入 600519 开始分析
+# Windows PowerShell
+.\.venv\Scripts\Activate.ps1
+tradingagents-web
+
+# Linux/macOS
+source .venv/bin/activate
+tradingagents-web
 ```
+浏览器打开 http://localhost:8501，输入股票代码开始分析。
 
 ### 4. 生成统一 HTML 报告
 
