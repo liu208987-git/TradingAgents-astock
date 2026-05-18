@@ -217,3 +217,19 @@ __marimo__/
 
 # Cache
 **/data_cache/
+
+# Project outputs & data
+output/
+.tradingagents/
+logs/
+data/raw/
+data/processed/
+data/cache/
+data/quarantine/
+
+# Config with local paths (keep example only)
+config/unified_pipeline.yaml
+
+# IDE
+.vscode/
+.idea/

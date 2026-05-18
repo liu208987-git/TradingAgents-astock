@@ -1,0 +1,73 @@
+# 统一投研流水线配置 V0.1
+# 三项目整合：TradingAgents-Astock + stock-analysis + a-stock-data
+
+# ── 外部项目路径 ──────────────────────────────────────────────────
+stock_analysis_dir: "../stock-analysis"                 # 修改为你的 stock-analysis 路径
+stock_analysis_python: "python"                       # stock-analysis 使用的 Python
+stock_analysis_script: "stock_full_report.py"
+
+a_stock_data_dir: "../a-stock-data"                   # 数据源参考（已被 TradingAgents 桥接）
+
+# ── TradingAgents 输出路径 ────────────────────────────────────────
+tradingagents_logs_dir: "~/.tradingagents/logs"
+tradingagents_log_pattern: "TradingAgentsStrategy_logs/full_states_log_*.json"
+
+# ── 本流水线输出路径 ──────────────────────────────────────────────
+output_dir: "output"
+supplement_dir: "output/supplement"
+unified_dir: "output/unified"
+reports_dir: "output/reports"
+
+# ── HTML 报告配置 ──────────────────────────────────────────────────
+html:
+  auto_latest: true
+  steps_required: 10
+
+# ── 补充数据配置 ──────────────────────────────────────────────────
+supplement:
+  target_blocks:
+    - share_structure
+    - zygc
+    - top10
+    - top10_free
+    - dividend
+    - margin
+    - fund_hold
+    - recommend
+    - yjyg
+    - yjkb
+    - gdhs
+  max_rows_per_block: 15
+  max_summary_tokens: 2000
+
+# ── 质量检测配置 ──────────────────────────────────────────────────
+quality:
+  margin_check_rows: 3           # 检测前 N 行标的证券代码
+  stale_days: 730                # gdhs 数据过期阈值（天）
+  stale_warning: "最新数据日期距今超过2年，仅作历史参考"
+  suspect_warning: "标的证券代码非当前股票，疑似全市场ETF数据"
+
+# ── 已知 warning ──────────────────────────────────────────────────
+known_warnings:
+  - id: mootdx_finance_unpack
+    message: "mootdx finance 'not enough values to unpack' — 自动降级，不影响分析"
+    frequency: "5/5 stocks"
+  - id: akshare_push2_proxy
+    message: "akshare push2.eastmoney.com 代理超时/ConnectionResetError — 已降级"
+    frequency: "5/5 stocks"
+  - id: deepseek_structured_output
+    message: "deepseek-reasoner 不支持 tool_choice — structured output 降级 free text"
+    frequency: "4/5 stocks"
+
+# ── 测试股票列表 ──────────────────────────────────────────────────
+test_stocks:
+  - code: "600519"
+    name: "贵州茅台"
+  - code: "300750"
+    name: "宁德时代"
+  - code: "002594"
+    name: "比亚迪"
+  - code: "601318"
+    name: "中国平安"
+  - code: "688981"
+    name: "中芯国际"
