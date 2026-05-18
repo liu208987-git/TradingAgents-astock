@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  basic-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pyyaml
+      - run: python -m py_compile scripts/run_stock_analysis_snapshot.py scripts/render_unified_html.py scripts/run_full_report.py scripts/test_unified_pipeline.py tradingagents/dataflows/pipeline_config.py
+      - run: python -c "import tomllib; tomllib.load(open('pyproject.toml','rb')); print('toml ok')"
+      - run: python -c "import yaml; yaml.safe_load(open('config/unified_pipeline.example.yaml', encoding='utf-8')); print('yaml ok')"
+      - name: Check for hardcoded local paths
+        run: |
+          if grep -rP "C:/Users/liu|C:\\\\Users\\\\liu|E:/python" scripts/ tradingagents/ config/ README.md UNIFIED_PIPELINE.md pyproject.toml; then
+            echo "ERROR: Found hardcoded local paths (see above)"
+            exit 1
+          fi
+          echo "No hardcoded paths found"

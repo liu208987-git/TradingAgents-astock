@@ -21,13 +21,21 @@ except Exception:
 
 # ── 路径配置 ────────────────────────────────────────────────────────
 ROOT = Path(__file__).resolve().parents[1]
-STOCK_ANALYSIS_DIR = ROOT.parent / "stock-analysis"
+
+# 优先从配置文件加载
+try:
+    from tradingagents.dataflows.pipeline_config import get_config
+    _cfg = get_config()
+    STOCK_ANALYSIS_DIR = Path(_cfg["stock_analysis_dir"])
+    UNIFIED_DIR = Path(_cfg["unified_dir"])
+    REPORTS_DIR = Path(_cfg["reports_dir"])
+except ImportError:
+    STOCK_ANALYSIS_DIR = ROOT.parent / "stock-analysis"
+    UNIFIED_DIR = ROOT / "output" / "unified"
+    REPORTS_DIR = ROOT / "output" / "reports"
+
 STOCK_ANALYSIS_SRC = STOCK_ANALYSIS_DIR / "src"
 sys.path.insert(0, str(STOCK_ANALYSIS_SRC))
-
-OUTPUT_DIR = ROOT / "output"
-UNIFIED_DIR = OUTPUT_DIR / "unified"
-REPORTS_DIR = OUTPUT_DIR / "reports"
 
 # ── 报告章节模板 ────────────────────────────────────────────────────
 
@@ -175,7 +183,10 @@ def build_unified_json(sa_raw: dict, code: str, name: str) -> dict:
 
 def _find_latest_ta_log(code: str) -> Path | None:
     """自动查找最新的 TradingAgents full_states_log JSON."""
-    log_dir = Path(f"C:/Users/liu/.tradingagents/logs/{code}/TradingAgentsStrategy_logs")
+    try:
+        log_dir = Path(get_config()["tradingagents_logs_dir"]) / code / "TradingAgentsStrategy_logs"
+    except Exception:
+        log_dir = Path.home() / ".tradingagents" / "logs" / code / "TradingAgentsStrategy_logs"
     if not log_dir.exists():
         return None
     logs = sorted(log_dir.glob("full_states_log_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
@@ -184,7 +195,11 @@ def _find_latest_ta_log(code: str) -> Path | None:
 
 def _find_sa_json(code: str) -> Path | None:
     """自动查找 stock-analysis data JSON."""
-    path = Path(f"C:/Users/liu/stock-analysis/output/data_{code}.json")
+    try:
+        sa_dir = Path(get_config()["stock_analysis_dir"])
+    except Exception:
+        sa_dir = ROOT.parent / "stock-analysis"
+    path = sa_dir / "output" / f"data_{code}.json"
     return path if path.exists() else None
 
 

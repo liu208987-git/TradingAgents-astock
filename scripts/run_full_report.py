@@ -55,7 +55,11 @@ def run_step(step: int, total: int, label: str, cmd: list[str], cwd: Path | None
 
 def find_latest_ta_log(code: str) -> Path | None:
     """自动查找最新的 TradingAgents full_states_log."""
-    log_dir = Path(f"C:/Users/liu/.tradingagents/logs/{code}/TradingAgentsStrategy_logs")
+    try:
+        from tradingagents.dataflows.pipeline_config import get_config
+        log_dir = Path(get_config()["tradingagents_logs_dir"]) / code / "TradingAgentsStrategy_logs"
+    except Exception:
+        log_dir = Path.home() / ".tradingagents" / "logs" / code / "TradingAgentsStrategy_logs"
     if not log_dir.exists():
         return None
     logs = sorted(log_dir.glob("full_states_log_*.json"), key=lambda p: p.stat().st_mtime, reverse=True)
@@ -112,11 +116,16 @@ def main() -> None:
 
     # Step 3: Render HTML
     current += 1
+    try:
+        from tradingagents.dataflows.pipeline_config import get_config
+        sa_json = str(Path(get_config()["stock_analysis_dir"]) / "output" / f"data_{code}.json")
+    except Exception:
+        sa_json = str(ROOT.parent / "stock-analysis" / "output" / f"data_{code}.json")
     render_cmd = [
         sys.executable, str(RENDER_SCRIPT), code,
         "--name", name,
         "--ta-result", str(ta_path),
-        "--sa-json", f"C:/Users/liu/stock-analysis/output/data_{code}.json",
+        "--sa-json", sa_json,
     ]
     ok = run_step(current, total_steps, "生成统一 HTML 报告", render_cmd)
 

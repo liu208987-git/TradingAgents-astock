@@ -8,9 +8,9 @@
 
 | 项目 | 路径 | 角色 |
 |------|------|------|
-| TradingAgents-Astock | `C:\Users\liu\TradingAgents-astock\` | 主项目，多 Agent 分析 + Web UI |
-| stock-analysis | `C:\Users\liu\stock-analysis\` | 补充数据采集 + HTML 渲染 |
-| a-stock-data | `C:\Users\liu\a-stock-data\` | 数据源参考（已被 TradingAgents 桥接） |
+| TradingAgents-Astock | `<workspace>/TradingAgents-astock/` | 主项目，多 Agent 分析 + Web UI |
+| stock-analysis | `<workspace>/stock-analysis/` | 补充数据采集 + HTML 渲染 |
+| a-stock-data | `<workspace>/a-stock-data/` | 数据源参考（已被 TradingAgents 桥接） |
 
 ---
 
@@ -26,7 +26,7 @@
 ### 一键生成 HTML 报告
 
 ```bash
-cd C:\Users\liu\TradingAgents-astock
+cd <your-workspace>/TradingAgents-astock
 .venv\Scripts\activate
 
 # 已有分析结果 → 跳过数据采集
@@ -63,10 +63,7 @@ python -c "from tradingagents.dataflows.supplemental_stock_analysis import get_s
 | 统一 JSON | `output/unified/{code}_unified.json` | html_renderer 兼容格式 |
 | 统一 HTML | `output/reports/{code}_unified.html` | 最终可视化报告（61-87KB） |
 
-TradingAgents 分析结果：
-```
-C:\Users\liu\.tradingagents\logs\{code}\TradingAgentsStrategy_logs\full_states_log_{date}.json
-```
+TradingAgents 分析结果：`~/.tradingagents/logs/{code}/TradingAgentsStrategy_logs/`
 
 ---
 
@@ -120,7 +117,11 @@ stock-analysis 采集 (stock_full_report.py)
 
 ## 配置文件
 
-`config/unified_pipeline.yaml` — 路径、质量参数、测试股票列表
+`config/unified_pipeline.yaml` — 路径、质量参数、测试股票列表。从 example 复制后修改：
+
+```bash
+cp config/unified_pipeline.example.yaml config/unified_pipeline.yaml
+```
 
 ---
 

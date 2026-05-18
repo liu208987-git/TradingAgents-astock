@@ -29,11 +29,11 @@ except ImportError:
     ]
     KNOWN_WARNINGS = []
 
-SUPPLEMENT_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\supplement")
-UNIFIED_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\unified")
-REPORTS_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\reports")
-TA_LOG_BASE = Path(r"C:\Users\liu\.tradingagents\logs")
-SA_DATA_DIR = Path(r"C:\Users\liu\stock-analysis\output")
+SUPPLEMENT_DIR = Path(config.get("supplement_dir", "output/supplement"))
+UNIFIED_DIR = Path(config.get("unified_dir", "output/unified"))
+REPORTS_DIR = Path(config.get("reports_dir", "output/reports"))
+TA_LOG_BASE = Path(config.get("tradingagents_logs_dir", str(Path.home() / ".tradingagents/logs")))
+SA_DATA_DIR = Path(config.get("stock_analysis_dir", "../stock-analysis")) / "output"
 
 
 def check(code: str, name: str) -> dict:

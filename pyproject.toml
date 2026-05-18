@@ -43,10 +43,11 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/simonlin1212/tradingagents-astock"
-Repository = "https://github.com/simonlin1212/tradingagents-astock"
-Issues = "https://github.com/simonlin1212/tradingagents-astock/issues"
-Upstream = "https://github.com/TauricResearch/TradingAgents"
+Homepage = "https://github.com/liu208987-git/TradingAgents-astock"
+Repository = "https://github.com/liu208987-git/TradingAgents-astock"
+Issues = "https://github.com/liu208987-git/TradingAgents-astock/issues"
+Upstream = "https://github.com/simonlin1212/TradingAgents-astock"
+Original = "https://github.com/TauricResearch/TradingAgents"
 
 [project.scripts]
 tradingagents = "cli.main:app"

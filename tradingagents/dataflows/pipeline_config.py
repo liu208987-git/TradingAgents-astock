@@ -1,22 +1,23 @@
 """统一流水线配置加载器。先读 config/unified_pipeline.yaml，不存在则用默认值。"""
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Any
 
-import yaml  # noqa: F401
+import yaml
 
-
-_CONFIG_PATH = Path(__file__).resolve().parents[2] / "config" / "unified_pipeline.yaml"
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_CONFIG_PATH = _PROJECT_ROOT / "config" / "unified_pipeline.yaml"
 
 _DEFAULTS: dict[str, Any] = {
-    "stock_analysis_dir": "C:/Users/liu/stock-analysis",
-    "stock_analysis_python": "E:/python/python.exe",
-    "tradingagents_logs_dir": "C:/Users/liu/.tradingagents/logs",
-    "output_dir": "C:/Users/liu/TradingAgents-astock/output",
-    "supplement_dir": "C:/Users/liu/TradingAgents-astock/output/supplement",
-    "unified_dir": "C:/Users/liu/TradingAgents-astock/output/unified",
-    "reports_dir": "C:/Users/liu/TradingAgents-astock/output/reports",
+    "stock_analysis_dir": str(_PROJECT_ROOT.parent / "stock-analysis"),
+    "stock_analysis_python": sys.executable,
+    "tradingagents_logs_dir": str(Path.home() / ".tradingagents" / "logs"),
+    "output_dir": str(_PROJECT_ROOT / "output"),
+    "supplement_dir": str(_PROJECT_ROOT / "output" / "supplement"),
+    "unified_dir": str(_PROJECT_ROOT / "output" / "unified"),
+    "reports_dir": str(_PROJECT_ROOT / "output" / "reports"),
     "quality": {
         "margin_check_rows": 3,
         "stale_days": 730,
@@ -51,8 +52,18 @@ def get_config() -> dict[str, Any]:
                 yaml_data = yaml.safe_load(f)
             if yaml_data and isinstance(yaml_data, dict):
                 config.update(yaml_data)
-        except Exception:
-            pass  # 配置文件损坏时静默降级到默认值
+        except Exception as exc:
+            print(f"[config warning] 配置文件读取失败，使用默认配置: {exc}")
+
+    # 解析 YAML 中的 ~ 和相对路径
+    for key in ("stock_analysis_dir", "stock_analysis_python", "tradingagents_logs_dir",
+                "output_dir", "supplement_dir", "unified_dir", "reports_dir"):
+        val = config.get(key, "")
+        if isinstance(val, str):
+            if val.startswith("~/"):
+                config[key] = str(Path.home() / val[2:])
+            elif not Path(val).is_absolute():
+                config[key] = str((_PROJECT_ROOT / val).resolve())
 
     # 确保 test_stocks 是 tuple 列表
     stocks = config.get("test_stocks", [])

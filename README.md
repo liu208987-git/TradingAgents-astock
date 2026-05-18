@@ -1,6 +1,6 @@
 # A股多Agent投研工作台 V0.1
 
-基于 [TradingAgents-Astock](https://github.com/simonlin1212/TradingAgents-astock) 深度特化的 A 股多 Agent 投研框架，整合 [stock-analysis](https://github.com/mingli30119/stock-analysis) 补充数据与 HTML 报告能力。
+本仓库是基于 [TradingAgents-Astock](https://github.com/simonlin1212/TradingAgents-astock) 的增强版 fork，新增 stock-analysis 补充数据接入、quality_flags 数据质量防护和统一 HTML 报告流水线，整合 [stock-analysis](https://github.com/mingli30119/stock-analysis) 补充数据与 HTML 报告能力。
 
 > 本项目仅供学习研究与技术演示，不构成任何投资建议。
 
@@ -27,7 +27,6 @@
 | [a-stock-data](https://github.com/simonlin1212/a-stock-data) | `../a-stock-data/` | 数据源参考（核心能力已桥接） |
 
 ```bash
-cd C:\Users\liu
 git clone https://github.com/mingli30119/stock-analysis.git
 git clone https://github.com/simonlin1212/a-stock-data.git
 cd stock-analysis && pip install akshare pandas numpy

@@ -18,11 +18,20 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # ── 路径配置 ────────────────────────────────────────────────────────
-STOCK_ANALYSIS_PYTHON = r"E:\python\python.exe"  # 系统 Python（stock-analysis 无独立 venv）
-STOCK_ANALYSIS_DIR = Path(r"C:\Users\liu\stock-analysis")
-STOCK_ANALYSIS_SCRIPT = STOCK_ANALYSIS_DIR / "stock_full_report.py"
+ROOT = Path(__file__).resolve().parents[1]
 
-OUTPUT_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\supplement")
+try:
+    from tradingagents.dataflows.pipeline_config import get_config
+    _cfg = get_config()
+    STOCK_ANALYSIS_PYTHON = _cfg["stock_analysis_python"]
+    STOCK_ANALYSIS_DIR = Path(_cfg["stock_analysis_dir"])
+    OUTPUT_DIR = Path(_cfg["supplement_dir"])
+except ImportError:
+    STOCK_ANALYSIS_PYTHON = sys.executable
+    STOCK_ANALYSIS_DIR = ROOT.parent / "stock-analysis"
+    OUTPUT_DIR = ROOT / "output" / "supplement"
+
+STOCK_ANALYSIS_SCRIPT = STOCK_ANALYSIS_DIR / "stock_full_report.py"
 
 TARGET_BLOCKS = [
     "share_structure",   # 股本结构变动
