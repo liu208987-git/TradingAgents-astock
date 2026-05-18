@@ -56,14 +56,19 @@ def get_config() -> dict[str, Any]:
             print(f"[config warning] 配置文件读取失败，使用默认配置: {exc}")
 
     # 解析 YAML 中的 ~ 和相对路径
-    for key in ("stock_analysis_dir", "stock_analysis_python", "tradingagents_logs_dir",
-                "output_dir", "supplement_dir", "unified_dir", "reports_dir"):
+    _path_keys = ("stock_analysis_dir", "tradingagents_logs_dir",
+                  "output_dir", "supplement_dir", "unified_dir", "reports_dir")
+    for key in _path_keys:
         val = config.get(key, "")
         if isinstance(val, str):
             if val.startswith("~/"):
                 config[key] = str(Path.home() / val[2:])
             elif not Path(val).is_absolute():
                 config[key] = str((_PROJECT_ROOT / val).resolve())
+    # stock_analysis_python: 允许 "python" 等 PATH 命令名
+    sap = config.get("stock_analysis_python", "")
+    if isinstance(sap, str) and sap.startswith("~/"):
+        config["stock_analysis_python"] = str(Path.home() / sap[2:])
 
     # 确保 test_stocks 是 tuple 列表
     stocks = config.get("test_stocks", [])
