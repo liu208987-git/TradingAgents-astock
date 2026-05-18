@@ -13,13 +13,21 @@ try:
 except Exception:
     pass
 
-TEST_STOCKS = [
-    ("600519", "贵州茅台"),
-    ("300750", "宁德时代"),
-    ("002594", "比亚迪"),
-    ("601318", "中国平安"),
-    ("688981", "中芯国际"),
-]
+# 优先从配置文件加载，不存在用默认值
+try:
+    from tradingagents.dataflows.pipeline_config import get_config
+    config = get_config()
+    TEST_STOCKS = config.get("test_stocks", [])
+    KNOWN_WARNINGS = config.get("known_warnings", [])
+except ImportError:
+    TEST_STOCKS = [
+        ("600519", "贵州茅台"),
+        ("300750", "宁德时代"),
+        ("002594", "比亚迪"),
+        ("601318", "中国平安"),
+        ("688981", "中芯国际"),
+    ]
+    KNOWN_WARNINGS = []
 
 SUPPLEMENT_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\supplement")
 UNIFIED_DIR = Path(r"C:\Users\liu\TradingAgents-astock\output\unified")
@@ -125,6 +133,15 @@ def main() -> None:
         if not r.get("supp_quality") and r["supp"]:
             print(f"  quality_flags: MISSING")
 
+    print()
+    if KNOWN_WARNINGS:
+        print("已知 warnings (不影响结果):")
+        for w in KNOWN_WARNINGS:
+            if isinstance(w, dict):
+                msg = w.get("message", str(w))
+            else:
+                msg = str(w)
+            print(f"  - {msg[:120]}")
     print()
     print("=" * 60)
     print(f"结果: {'全部通过' if all_ok else '存在问题，见上'}")
