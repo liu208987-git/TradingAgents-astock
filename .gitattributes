@@ -1,0 +1,18 @@
+# Force LF line endings for all text files in repo
+* text=auto eol=lf
+
+# Python
+*.py text eol=lf diff=python
+
+# YAML
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# TOML / Config
+*.toml text eol=lf
+*.cfg text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
